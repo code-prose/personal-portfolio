@@ -1,0 +1,170 @@
+---
+import SectionHeading from '../common/SectionHeading.astro';
+import Card from '../common/Card.astro';
+import Button from '../common/Button.astro';
+import { fetchGitLabProjects, type Project } from '../../lib/gitlab';
+import fallbackProjects from '../../data/projects.json';
+
+// Try to fetch from GitLab, fall back to static data
+let projects: Project[] = [];
+
+try {
+  const gitlabUsername = 'loganrose';
+  const gitlabProjects = await fetchGitLabProjects(gitlabUsername);
+
+  if (gitlabProjects.length > 0) {
+    projects = gitlabProjects;
+    console.log(`Loaded ${projects.length} projects from GitLab`);
+  } else {
+    projects = fallbackProjects as Project[];
+    console.log('Using fallback projects data');
+  }
+} catch (error) {
+  console.error('Error loading projects:', error);
+  projects = fallbackProjects as Project[];
+}
+
+// Sort: featured first, then by stars
+const sortedProjects = [...projects].sort((a, b) => {
+  if (a.featured && !b.featured) return -1;
+  if (!a.featured && b.featured) return 1;
+  return b.stars - a.stars;
+});
+
+const displayProjects = sortedProjects.slice(0, 6);
+
+function getLanguageColor(language: string): string {
+  const colors: Record<string, string> = {
+    TypeScript: '#3178c6',
+    JavaScript: '#f7df1e',
+    Python: '#3776ab',
+    Go: '#00add8',
+    Rust: '#dea584',
+    Java: '#b07219',
+    Ruby: '#701516',
+    PHP: '#4F5D95',
+    CSS: '#563d7c',
+    HTML: '#e34c26',
+    Shell: '#89e051',
+    Docker: '#384d54',
+    SQL: '#e38c00',
+  };
+  return colors[language] || '#6b7280';
+}
+
+function getTopLanguages(languages: Record<string, number>): [string, number][] {
+  return Object.entries(languages)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+}
+---
+
+<section id="projects" class="py-24 px-4">
+  <div class="max-w-6xl mx-auto">
+    <SectionHeading
+      title="Projects"
+      subtitle="A selection of projects I've worked on"
+    />
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {displayProjects.map((project) => (
+        <Card class="flex flex-col h-full">
+          <div class="p-6 flex flex-col h-full">
+            <div class="flex items-start justify-between mb-4">
+              <div class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+              </div>
+              {project.featured && (
+                <span class="px-2 py-1 text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full">
+                  Featured
+                </span>
+              )}
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              {project.name}
+            </h3>
+
+            <p class="text-gray-600 dark:text-gray-400 mb-4 flex-grow line-clamp-3">
+              {project.description}
+            </p>
+
+            {project.topics.length > 0 && (
+              <div class="flex flex-wrap gap-2 mb-4">
+                {project.topics.slice(0, 4).map((topic) => (
+                  <span class="px-2 py-1 text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 rounded-full">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {Object.keys(project.languages).length > 0 && (
+              <div class="mb-4">
+                <div class="h-2 rounded-full overflow-hidden flex bg-gray-200 dark:bg-gray-800">
+                  {getTopLanguages(project.languages).map(([lang, percent]) => (
+                    <div
+                      style={`width: ${percent}%; background-color: ${getLanguageColor(lang)}`}
+                      title={`${lang}: ${percent}%`}
+                    ></div>
+                  ))}
+                </div>
+                <div class="flex flex-wrap gap-3 mt-2">
+                  {getTopLanguages(project.languages).map(([lang, percent]) => (
+                    <span class="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full" style={`background-color: ${getLanguageColor(lang)}`}></span>
+                      {lang} {Math.round(percent)}%
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+              <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  {project.stars}
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                  {project.forks}
+                </span>
+              </div>
+
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary-600 dark:text-primary-400 hover:underline text-sm font-medium"
+              >
+                View Project
+              </a>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+
+    <div class="text-center mt-12">
+      <Button href="https://gitlab.com/loganrose" variant="outline">
+        View All Projects on GitLab
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

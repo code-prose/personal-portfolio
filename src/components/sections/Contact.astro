@@ -1,0 +1,150 @@
+---
+import SectionHeading from '../common/SectionHeading.astro';
+import Button from '../common/Button.astro';
+import personal from '../../data/personal.json';
+---
+
+<section id="contact" class="py-24 px-4 bg-gray-50 dark:bg-gray-900/50">
+  <div class="max-w-4xl mx-auto">
+    <SectionHeading
+      title="Get In Touch"
+      subtitle="Have a project in mind or want to discuss opportunities? I'd love to hear from you."
+    />
+
+    <div class="grid md:grid-cols-2 gap-12">
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+          Contact Information
+        </h3>
+
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+              <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white">Email</h4>
+              <a href={`mailto:${personal.email}`} class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                {personal.email}
+              </a>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+              <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white">Location</h4>
+              <p class="text-gray-600 dark:text-gray-400">{personal.location}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+              <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white">Social</h4>
+              <div class="flex gap-4 mt-2">
+                {personal.social.gitlab && (
+                  <a href={personal.social.gitlab} target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+                    GitLab
+                  </a>
+                )}
+                {personal.social.github && (
+                  <a href={personal.social.github} target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+                    GitHub
+                  </a>
+                )}
+                {personal.social.linkedin && (
+                  <a href={personal.social.linkedin} target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+                    LinkedIn
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-900 rounded-xl p-8 border border-gray-200 dark:border-gray-800">
+        <form id="contact-form" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              placeholder="Your name"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              placeholder="your@email.com"
+            />
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              required
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors resize-none"
+              placeholder="Your message..."
+            ></textarea>
+          </div>
+
+          <Button type="submit" class="w-full">
+            Send Message
+          </Button>
+        </form>
+
+        <p class="mt-4 text-sm text-gray-500 dark:text-gray-500 text-center">
+          Or email me directly at <a href={`mailto:${personal.email}`} class="text-primary-600 dark:text-primary-400 hover:underline">{personal.email}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const message = formData.get('message');
+
+    // Create mailto link with form data
+    const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    window.location.href = `mailto:contact@loganrose.dev?subject=${subject}&body=${body}`;
+  });
+</script>

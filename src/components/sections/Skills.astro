@@ -1,0 +1,41 @@
+---
+import SectionHeading from '../common/SectionHeading.astro';
+import skills from '../../data/skills.json';
+---
+
+<section id="skills" class="py-24 px-4 bg-gray-50 dark:bg-gray-900/50">
+  <div class="max-w-6xl mx-auto">
+    <SectionHeading
+      title="Skills & Technologies"
+      subtitle="The tools and technologies I work with"
+    />
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {skills.categories.map((category) => (
+        <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <span class="w-2 h-2 bg-primary-500 rounded-full"></span>
+            {category.name}
+          </h3>
+
+          <div class="space-y-4">
+            {category.skills.map((skill) => (
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">{skill.name}</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-500">{skill.level}%</span>
+                </div>
+                <div class="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                  <div
+                    class="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full transition-all duration-500"
+                    style={`width: ${skill.level}%`}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

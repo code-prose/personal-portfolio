@@ -1,0 +1,60 @@
+---
+import Button from '../common/Button.astro';
+import personal from '../../data/personal.json';
+---
+
+<section id="hero" class="min-h-screen flex items-center justify-center pt-20 px-4">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="animate-fade-in">
+      <p class="text-primary-600 dark:text-primary-400 font-medium mb-4">
+        Hello, I'm
+      </p>
+
+      <h1 class="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
+        {personal.name}
+      </h1>
+
+      <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-4">
+        {personal.title}
+      </p>
+
+      <p class="text-lg text-gray-500 dark:text-gray-500 mb-12 max-w-2xl mx-auto">
+        {personal.tagline}
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="#projects" size="lg">
+          View My Work
+        </Button>
+        <Button href="#contact" variant="outline" size="lg">
+          Get In Touch
+        </Button>
+      </div>
+    </div>
+
+    <div class="mt-16 animate-bounce">
+      <a href="#about" class="inline-block text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+</style>
