@@ -1,41 +1,190 @@
 ---
 import SectionHeading from '../common/SectionHeading.astro';
-import skills from '../../data/skills.json';
+import { fetchGitHubProjects } from '../../lib/github';
+
+const githubUsername = 'code-prose';
+const projects = await fetchGitHubProjects(githubUsername);
+
+// Aggregate all languages across projects
+const languageTotals: Record<string, number> = {};
+
+projects.forEach((project) => {
+  Object.entries(project.languages).forEach(([lang, percent]) => {
+    languageTotals[lang] = (languageTotals[lang] || 0) + percent;
+  });
+});
+
+// Sort by total usage and get top languages
+const sortedLanguages = Object.entries(languageTotals)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 12);
+
+// Normalize to percentage (max becomes 100%)
+const maxUsage = sortedLanguages[0]?.[1] || 1;
+const languages = sortedLanguages.map(([name, total]) => ({
+  name,
+  level: Math.round((total / maxUsage) * 100),
+}));
+
+// Get unique topics/technologies from projects
+const allTopics = new Set<string>();
+projects.forEach((project) => {
+  project.topics.forEach((topic) => allTopics.add(topic));
+});
+
+// Common technology categories for grouping topics
+const frameworkKeywords = ['react', 'vue', 'angular', 'svelte', 'next', 'nuxt', 'astro', 'express', 'fastapi', 'django', 'flask', 'rails', 'spring'];
+const toolKeywords = ['docker', 'kubernetes', 'aws', 'gcp', 'azure', 'terraform', 'ansible', 'jenkins', 'github-actions', 'ci-cd', 'git'];
+const dbKeywords = ['postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch', 'sqlite', 'prisma', 'supabase', 'firebase'];
+
+const frameworks = Array.from(allTopics).filter(t =>
+  frameworkKeywords.some(k => t.toLowerCase().includes(k))
+);
+const tools = Array.from(allTopics).filter(t =>
+  toolKeywords.some(k => t.toLowerCase().includes(k))
+);
+const databases = Array.from(allTopics).filter(t =>
+  dbKeywords.some(k => t.toLowerCase().includes(k))
+);
+const otherTopics = Array.from(allTopics).filter(t =>
+  !frameworks.includes(t) && !tools.includes(t) && !databases.includes(t)
+).slice(0, 8);
+
+function getLanguageColor(language: string): string {
+  const colors: Record<string, string> = {
+    TypeScript: '#3178c6',
+    JavaScript: '#f7df1e',
+    Python: '#3776ab',
+    Go: '#00add8',
+    Rust: '#dea584',
+    Java: '#b07219',
+    Ruby: '#701516',
+    PHP: '#4F5D95',
+    CSS: '#563d7c',
+    HTML: '#e34c26',
+    Shell: '#89e051',
+    'C++': '#f34b7d',
+    C: '#555555',
+    'C#': '#178600',
+    Swift: '#ffac45',
+    Kotlin: '#A97BFF',
+    Dart: '#00B4AB',
+    Scala: '#c22d40',
+    Elixir: '#6e4a7e',
+    Haskell: '#5e5086',
+  };
+  return colors[language] || '#6b7280';
+}
 ---
 
 <section id="skills" class="py-24 px-4 bg-gray-50 dark:bg-gray-900/50">
   <div class="max-w-6xl mx-auto">
     <SectionHeading
       title="Skills & Technologies"
-      subtitle="The tools and technologies I work with"
+      subtitle="Languages and tools from my GitHub projects"
     />
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {skills.categories.map((category) => (
+    {languages.length > 0 ? (
+      <div class="space-y-8">
+        <!-- Languages Section -->
         <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <span class="w-2 h-2 bg-primary-500 rounded-full"></span>
-            {category.name}
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+            Languages
           </h3>
 
-          <div class="space-y-4">
-            {category.skills.map((skill) => (
-              <div>
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{skill.name}</span>
-                  <span class="text-xs text-gray-500 dark:text-gray-500">{skill.level}%</span>
-                </div>
-                <div class="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                  <div
-                    class="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full transition-all duration-500"
-                    style={`width: ${skill.level}%`}
-                  ></div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {languages.map((lang) => (
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-4 h-4 rounded-full flex-shrink-0"
+                  style={`background-color: ${getLanguageColor(lang.name)}`}
+                />
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{lang.name}</span>
+                    <span class="text-xs text-gray-500">{lang.level}%</span>
+                  </div>
+                  <div class="h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                    <div
+                      class="h-full rounded-full"
+                      style={`width: ${lang.level}%; background-color: ${getLanguageColor(lang.name)}`}
+                    />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      ))}
-    </div>
+
+        <!-- Topics/Technologies -->
+        {(frameworks.length > 0 || tools.length > 0 || databases.length > 0 || otherTopics.length > 0) && (
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {frameworks.length > 0 && (
+              <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">
+                  Frameworks
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  {frameworks.map((topic) => (
+                    <span class="px-3 py-1 text-sm bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 rounded-full">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {tools.length > 0 && (
+              <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">
+                  DevOps & Tools
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  {tools.map((topic) => (
+                    <span class="px-3 py-1 text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {databases.length > 0 && (
+              <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">
+                  Databases
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  {databases.map((topic) => (
+                    <span class="px-3 py-1 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded-full">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {otherTopics.length > 0 && (
+              <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">
+                  Other
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  {otherTopics.map((topic) => (
+                    <span class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 dark:text-gray-400">
+        Unable to load skills from GitHub. Please check back later.
+      </p>
+    )}
   </div>
 </section>

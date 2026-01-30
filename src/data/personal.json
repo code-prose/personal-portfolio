@@ -1,0 +1,13 @@
+{
+  "name": "Logan Rose",
+  "title": "Software Engineer",
+  "tagline": "Building scalable solutions with Rust, Python, and modern web technologies",
+  "email": "logprose@umich.edu",
+  "location": "Ann Arbor, MI",
+  "bio": "Software engineer with experience building data pipelines, internal tools, and web applications. I focus on writing clean, maintainable code and improving developer workflows.",
+  "social": {
+    "github": "https://github.com/code-prose",
+    "linkedin": "https://linkedin.com/in/loganrose"
+  },
+  "resumeUrl": "/assets/resume.pdf"
+}

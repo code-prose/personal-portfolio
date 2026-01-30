@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "name": "API Gateway Service",
+    "description": "High-performance API gateway handling 10k+ requests per second with rate limiting, authentication, and request transformation.",
+    "topics": ["go", "microservices", "api-gateway", "redis"],
+    "languages": { "Go": 75, "Docker": 15, "Shell": 10 },
+    "stars": 45,
+    "forks": 12,
+    "url": "https://gitlab.com/loganrose/api-gateway",
+    "homepage": null,
+    "featured": true
+  },
+  {
+    "id": "2",
+    "name": "Real-time Dashboard",
+    "description": "React-based dashboard with real-time data visualization, WebSocket integration, and responsive design.",
+    "topics": ["react", "typescript", "websocket", "d3js"],
+    "languages": { "TypeScript": 80, "CSS": 15, "HTML": 5 },
+    "stars": 32,
+    "forks": 8,
+    "url": "https://gitlab.com/loganrose/realtime-dashboard",
+    "homepage": "https://dashboard-demo.loganrose.dev",
+    "featured": true
+  },
+  {
+    "id": "3",
+    "name": "CLI Task Manager",
+    "description": "Command-line task management tool with project tracking, time logging, and reporting features.",
+    "topics": ["rust", "cli", "productivity", "terminal"],
+    "languages": { "Rust": 95, "Shell": 5 },
+    "stars": 28,
+    "forks": 5,
+    "url": "https://gitlab.com/loganrose/task-cli",
+    "homepage": null,
+    "featured": true
+  },
+  {
+    "id": "4",
+    "name": "E-commerce API",
+    "description": "RESTful API for e-commerce platform with product catalog, cart management, and payment integration.",
+    "topics": ["python", "fastapi", "postgresql", "stripe"],
+    "languages": { "Python": 85, "SQL": 10, "Docker": 5 },
+    "stars": 18,
+    "forks": 6,
+    "url": "https://gitlab.com/loganrose/ecommerce-api",
+    "homepage": null,
+    "featured": false
+  }
+]

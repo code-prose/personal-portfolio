@@ -8,7 +8,7 @@ import personal from '../../data/personal.json';
   <div class="max-w-4xl mx-auto">
     <SectionHeading
       title="Get In Touch"
-      subtitle="Have a project in mind or want to discuss opportunities? I'd love to hear from you."
+      subtitle="Interested in connecting? I'd love to hear from you."
     />
 
     <div class="grid md:grid-cols-2 gap-12">
@@ -145,6 +145,6 @@ import personal from '../../data/personal.json';
     // Create mailto link with form data
     const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-    window.location.href = `mailto:contact@loganrose.dev?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:logprose@umich.edu?subject=${subject}&body=${body}`;
   });
 </script>

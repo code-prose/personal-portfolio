@@ -1,0 +1,33 @@
+[
+  {
+    "id": "1",
+    "company": "Ally Financial",
+    "role": "Software Engineer",
+    "location": "Detroit, MI",
+    "startDate": "2024-06",
+    "endDate": null,
+    "current": true,
+    "description": "Building internal tools and data pipelines for Auto Finance operations.",
+    "highlights": [
+      "Unified site across teams using Rust backend (Lambda) and Next.js",
+      "Built ETL pipeline processing millions of data points for Auto Finance agreements",
+      "Developed interactive dashboard improving data interfacing for business and IT teams",
+      "Implemented machine learning model to help partnered dealerships improve processing speed",
+      "Refined build pipeline and implemented linters into GitLab CI/CD workflows",
+      "Onboarded team to best practices with tools like uv, ruff, and pre-commit"
+    ],
+    "technologies": ["Rust", "Python", "Next.js", "AWS Lambda", "Snowflake", "GitLab CI/CD"]
+  },
+  {
+    "id": "2",
+    "company": "University of Michigan",
+    "role": "B.S. Computer Science",
+    "location": "Ann Arbor, MI",
+    "startDate": "2021-08",
+    "endDate": "2024-05",
+    "current": false,
+    "description": "Bachelor of Science in Computer Science.",
+    "highlights": [],
+    "technologies": []
+  }
+]

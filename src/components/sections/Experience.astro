@@ -1,6 +1,10 @@
 ---
 import SectionHeading from '../common/SectionHeading.astro';
-import experience from '../../data/experience.json';
+import experienceData from '../../data/experience.json';
+
+// Separate work experience from education
+const workExperience = experienceData.filter(item => !item.company.includes('University'));
+const education = experienceData.filter(item => item.company.includes('University'));
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return 'Present';
@@ -13,75 +17,85 @@ function formatDate(dateStr: string | null): string {
   <div class="max-w-4xl mx-auto">
     <SectionHeading
       title="Experience"
-      subtitle="My professional journey and career milestones"
+      subtitle="Professional background and education"
     />
 
-    <div class="relative">
-      <!-- Timeline line -->
-      <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-800 transform md:-translate-x-1/2"></div>
+    <div class="space-y-12">
+      <!-- Work Experience -->
+      {workExperience.map((job) => (
+        <div class="bg-white dark:bg-gray-900 rounded-xl p-6 md:p-8 border border-gray-200 dark:border-gray-800">
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+            <div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                {job.role}
+              </h3>
+              <p class="text-primary-600 dark:text-primary-400 font-medium">
+                {job.company}
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-500">
+                {job.location}
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              {job.current && (
+                <span class="px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                  Current
+                </span>
+              )}
+              <span class="text-sm text-gray-500 dark:text-gray-500 whitespace-nowrap">
+                {formatDate(job.startDate)} - {formatDate(job.endDate)}
+              </span>
+            </div>
+          </div>
 
-      <div class="space-y-12">
-        {experience.map((job, index) => (
-          <div class={`relative flex flex-col md:flex-row gap-8 ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
-            <!-- Timeline dot -->
-            <div class="absolute left-0 md:left-1/2 w-4 h-4 bg-primary-500 rounded-full transform -translate-x-1/2 mt-1.5 ring-4 ring-white dark:ring-gray-950"></div>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">
+            {job.description}
+          </p>
 
-            <!-- Content -->
-            <div class={`md:w-1/2 pl-8 md:pl-0 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
-              <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
-                <div class={`flex items-center gap-2 mb-2 ${index % 2 === 0 ? 'md:justify-end' : ''}`}>
-                  {job.current && (
-                    <span class="px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
-                      Current
-                    </span>
-                  )}
-                  <span class="text-sm text-gray-500 dark:text-gray-500">
-                    {formatDate(job.startDate)} - {formatDate(job.endDate)}
-                  </span>
+          {job.highlights.length > 0 && (
+            <ul class="space-y-3 mb-6">
+              {job.highlights.map((highlight) => (
+                <li class="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-3">
+                  <svg class="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {job.technologies.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {job.technologies.map((tech) => (
+                <span class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+
+      <!-- Education -->
+      {education.length > 0 && (
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Education</h3>
+          {education.map((edu) => (
+            <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div>
+                  <p class="font-bold text-gray-900 dark:text-white">{edu.role}</p>
+                  <p class="text-primary-600 dark:text-primary-400">{edu.company}</p>
                 </div>
-
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                  {job.role}
-                </h3>
-
-                <p class="text-primary-600 dark:text-primary-400 font-medium mb-2">
-                  {job.company}
-                </p>
-
-                <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">
-                  {job.location}
-                </p>
-
-                <p class="text-gray-600 dark:text-gray-400 mb-4">
-                  {job.description}
-                </p>
-
-                <ul class={`space-y-2 mb-4 ${index % 2 === 0 ? 'md:text-right' : ''}`}>
-                  {job.highlights.map((highlight) => (
-                    <li class="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
-                      <svg class={`w-4 h-4 text-primary-500 flex-shrink-0 mt-0.5 ${index % 2 === 0 ? 'md:order-last' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div class={`flex flex-wrap gap-2 ${index % 2 === 0 ? 'md:justify-end' : ''}`}>
-                  {job.technologies.map((tech) => (
-                    <span class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded">
-                      {tech}
-                    </span>
-                  ))}
+                <div class="text-sm text-gray-500 dark:text-gray-500">
+                  {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
                 </div>
               </div>
             </div>
-
-            <!-- Spacer for alternating layout -->
-            <div class="hidden md:block md:w-1/2"></div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 </section>

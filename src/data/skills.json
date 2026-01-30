@@ -1,0 +1,53 @@
+{
+  "categories": [
+    {
+      "name": "Languages",
+      "skills": [
+        { "name": "TypeScript", "level": 95 },
+        { "name": "JavaScript", "level": 95 },
+        { "name": "Python", "level": 85 },
+        { "name": "Go", "level": 70 },
+        { "name": "Rust", "level": 60 }
+      ]
+    },
+    {
+      "name": "Frontend",
+      "skills": [
+        { "name": "React", "level": 90 },
+        { "name": "Vue.js", "level": 85 },
+        { "name": "Astro", "level": 80 },
+        { "name": "Tailwind CSS", "level": 90 },
+        { "name": "Next.js", "level": 85 }
+      ]
+    },
+    {
+      "name": "Backend",
+      "skills": [
+        { "name": "Node.js", "level": 90 },
+        { "name": "Django", "level": 75 },
+        { "name": "FastAPI", "level": 80 },
+        { "name": "GraphQL", "level": 75 },
+        { "name": "REST APIs", "level": 95 }
+      ]
+    },
+    {
+      "name": "Databases",
+      "skills": [
+        { "name": "PostgreSQL", "level": 85 },
+        { "name": "MongoDB", "level": 80 },
+        { "name": "Redis", "level": 75 },
+        { "name": "SQLite", "level": 80 }
+      ]
+    },
+    {
+      "name": "DevOps & Tools",
+      "skills": [
+        { "name": "Docker", "level": 85 },
+        { "name": "Kubernetes", "level": 70 },
+        { "name": "GitLab CI/CD", "level": 85 },
+        { "name": "AWS", "level": 75 },
+        { "name": "Linux", "level": 80 }
+      ]
+    }
+  ]
+}
