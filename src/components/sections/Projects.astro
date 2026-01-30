@@ -2,19 +2,20 @@
 import SectionHeading from '../common/SectionHeading.astro';
 import Card from '../common/Card.astro';
 import Button from '../common/Button.astro';
-import { fetchGitLabProjects, type Project } from '../../lib/gitlab';
+import GitHubContributions from '../common/GitHubContributions.astro';
+import { fetchGitHubProjects, type Project } from '../../lib/github';
 import fallbackProjects from '../../data/projects.json';
 
-// Try to fetch from GitLab, fall back to static data
+// Try to fetch from GitHub, fall back to static data
 let projects: Project[] = [];
 
 try {
-  const gitlabUsername = 'loganrose';
-  const gitlabProjects = await fetchGitLabProjects(gitlabUsername);
+  const githubUsername = 'code-prose';
+  const githubProjects = await fetchGitHubProjects(githubUsername);
 
-  if (gitlabProjects.length > 0) {
-    projects = gitlabProjects;
-    console.log(`Loaded ${projects.length} projects from GitLab`);
+  if (githubProjects.length > 0) {
+    projects = githubProjects;
+    console.log(`Loaded ${projects.length} projects from GitHub`);
   } else {
     projects = fallbackProjects as Project[];
     console.log('Using fallback projects data');
@@ -62,11 +63,13 @@ function getTopLanguages(languages: Record<string, number>): [string, number][] 
 <section id="projects" class="py-24 px-4">
   <div class="max-w-6xl mx-auto">
     <SectionHeading
-      title="Projects"
+      title="GitHub Projects"
       subtitle="A selection of projects I've worked on"
     />
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <GitHubContributions username="code-prose" />
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
       {displayProjects.map((project) => (
         <Card class="flex flex-col h-full">
           <div class="p-6 flex flex-col h-full">
@@ -153,8 +156,8 @@ function getTopLanguages(languages: Record<string, number>): [string, number][] 
     </div>
 
     <div class="text-center mt-12">
-      <Button href="https://gitlab.com/loganrose" variant="outline">
-        View All Projects on GitLab
+      <Button href="https://github.com/code-prose" variant="outline">
+        View All Projects on GitHub
       </Button>
     </div>
   </div>

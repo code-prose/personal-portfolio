@@ -1,0 +1,348 @@
+---
+import { fetchContributionStats, type ContributionStats } from '../../lib/github-contributions';
+
+interface Props {
+  username: string;
+}
+
+const { username } = Astro.props;
+
+const stats = await fetchContributionStats(username);
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Build month labels: for each week, determine if it starts a new month
+function getWeekMonthLabels(weeks: NonNullable<ContributionStats>['weeks']): (string | null)[] {
+  let lastMonth = -1;
+  return weeks.map((week) => {
+    const firstDay = week.contributionDays[0];
+    if (firstDay) {
+      const month = new Date(firstDay.date).getMonth();
+      if (month !== lastMonth) {
+        lastMonth = month;
+        return months[month];
+      }
+    }
+    return null;
+  });
+}
+
+const weekMonthLabels = stats ? getWeekMonthLabels(stats.weeks) : [];
+---
+
+<div class="contribution-wrapper">
+  {stats ? (
+    <div class="flex flex-col gap-4">
+      <!-- Stats Row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="stat-card">
+          <div class="stat-value">{stats.totalContributions.toLocaleString()}</div>
+          <div class="stat-label">contributions this year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{stats.currentStreak}</div>
+          <div class="stat-label">day current streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{stats.longestStreak}</div>
+          <div class="stat-label">day longest streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{stats.averagePerDay}</div>
+          <div class="stat-label">avg per active day</div>
+        </div>
+      </div>
+
+      <!-- Contribution Calendar -->
+      <div class="calendar-container">
+        <!-- Tooltip -->
+        <div id="contribution-tooltip" class="tooltip" aria-hidden="true"></div>
+
+        <table class="calendar-table">
+          <!-- Month Labels Row -->
+          <thead>
+            <tr>
+              <td class="label-cell"></td>
+              {weekMonthLabels.map((label) => (
+                <td class="month-cell">{label || ''}</td>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((dayName, dayIndex) => (
+              <tr>
+                <td class="label-cell">
+                  {(dayIndex === 1 || dayIndex === 3 || dayIndex === 5) ? dayName : ''}
+                </td>
+                {stats.weeks.map((week) => {
+                  const day = week.contributionDays[dayIndex];
+                  return day ? (
+                    <td class="day-cell">
+                      <div
+                        class={`day level-${day.contributionLevel.toLowerCase()}`}
+                        data-count={day.contributionCount}
+                        data-date={formatDate(day.date)}
+                      />
+                    </td>
+                  ) : (
+                    <td class="day-cell">
+                      <div class="day-placeholder" />
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <!-- Legend -->
+        <div class="legend">
+          <span>Less</span>
+          <div class="legend-day level-none"></div>
+          <div class="legend-day level-first_quartile"></div>
+          <div class="legend-day level-second_quartile"></div>
+          <div class="legend-day level-third_quartile"></div>
+          <div class="legend-day level-fourth_quartile"></div>
+          <span>More</span>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class="fallback">
+      <p class="text-gray-500 dark:text-gray-400 text-center py-8">
+        Add a <code class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">GITHUB_TOKEN</code> to your .env file to display contribution stats.
+      </p>
+    </div>
+  )}
+</div>
+
+<script>
+  function initTooltip() {
+    const tooltip = document.getElementById('contribution-tooltip');
+    const container = document.querySelector('.calendar-container');
+    if (!tooltip || !container) return;
+
+    container.addEventListener('mouseover', (e) => {
+      const target = e.target as HTMLElement;
+      if (!target.classList.contains('day') || target.classList.contains('day-placeholder')) return;
+
+      const count = target.dataset.count;
+      const date = target.dataset.date;
+
+      if (count !== undefined) {
+        const contribution = count === '1' ? 'contribution' : 'contributions';
+        tooltip.textContent = `${count} ${contribution}`;
+        tooltip.style.opacity = '1';
+
+        const rect = target.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        const left = rect.left - containerRect.left + rect.width / 2;
+        const top = rect.top - containerRect.top - 8;
+
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+      }
+    });
+
+    container.addEventListener('mouseout', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('day')) {
+        tooltip.style.opacity = '0';
+      }
+    });
+  }
+
+  initTooltip();
+  document.addEventListener('astro:page-load', initTooltip);
+</script>
+
+<style>
+  .contribution-wrapper {
+    --contribution-none: #ebedf0;
+    --contribution-first_quartile: #9be9a8;
+    --contribution-second_quartile: #40c463;
+    --contribution-third_quartile: #30a14e;
+    --contribution-fourth_quartile: #216e39;
+  }
+
+  :global(.dark) .contribution-wrapper {
+    --contribution-none: #161b22;
+    --contribution-first_quartile: #0e4429;
+    --contribution-second_quartile: #006d32;
+    --contribution-third_quartile: #26a641;
+    --contribution-fourth_quartile: #39d353;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  :global(.dark) .stat-card {
+    background: #111827;
+    border-color: #1f2937;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  :global(.dark) .stat-value {
+    color: #f9fafb;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+  }
+
+  :global(.dark) .stat-label {
+    color: #9ca3af;
+  }
+
+  .calendar-container {
+    position: relative;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  :global(.dark) .calendar-container {
+    background: #111827;
+    border-color: #1f2937;
+  }
+
+  .tooltip {
+    position: absolute;
+    background: #24292f;
+    color: white;
+    padding: 0.4em 0.6em;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    transform: translateX(-50%) translateY(-100%);
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #24292f;
+  }
+
+  :global(.dark) .tooltip {
+    background: #484f58;
+  }
+
+  :global(.dark) .tooltip::after {
+    border-top-color: #484f58;
+  }
+
+  .calendar-table {
+    width: calc(100% - 0.5rem);
+    margin: 0.25rem;
+    border-collapse: separate;
+    border-spacing: 3px;
+    table-layout: fixed;
+  }
+
+  .label-cell {
+    width: 2rem;
+    font-size: 0.65rem;
+    color: #6b7280;
+    text-align: right;
+    padding-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .month-cell {
+    font-size: 0.65rem;
+    color: #6b7280;
+    text-align: left;
+    vertical-align: bottom;
+    padding-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .day-cell {
+    padding: 0;
+    vertical-align: middle;
+  }
+
+  .day,
+  .day-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 2px;
+  }
+
+  .day {
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .day:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 2px #1f6feb;
+    z-index: 1;
+    position: relative;
+  }
+
+  .day-placeholder {
+    background: transparent;
+  }
+
+  .level-none { background: var(--contribution-none); }
+  .level-first_quartile { background: var(--contribution-first_quartile); }
+  .level-second_quartile { background: var(--contribution-second_quartile); }
+  .level-third_quartile { background: var(--contribution-third_quartile); }
+  .level-fourth_quartile { background: var(--contribution-fourth_quartile); }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    font-size: 0.65rem;
+    color: #6b7280;
+  }
+
+  .legend span {
+    padding: 0 0.25rem;
+  }
+
+  .legend-day {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 2px;
+  }
+</style>
