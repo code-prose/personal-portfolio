@@ -6,24 +6,8 @@ import GitHubContributions from '../common/GitHubContributions.astro';
 import { fetchGitHubProjects, type Project } from '../../lib/github';
 import fallbackProjects from '../../data/projects.json';
 
-// Try to fetch from GitHub, fall back to static data
-let projects: Project[] = [];
-
-try {
-  const githubUsername = 'code-prose';
-  const githubProjects = await fetchGitHubProjects(githubUsername);
-
-  if (githubProjects.length > 0) {
-    projects = githubProjects;
-    console.log(`Loaded ${projects.length} projects from GitHub`);
-  } else {
-    projects = fallbackProjects as Project[];
-    console.log('Using fallback projects data');
-  }
-} catch (error) {
-  console.error('Error loading projects:', error);
-  projects = fallbackProjects as Project[];
-}
+// Use curated projects data with README descriptions
+const projects: Project[] = fallbackProjects as Project[];
 
 // Sort: featured first, then by stars
 const sortedProjects = [...projects].sort((a, b) => {
