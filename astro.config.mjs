@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://loganrose.dev',
+  site: 'https://logancodes.com',
   output: 'static',
   vite: {
     plugins: [tailwindcss()]
