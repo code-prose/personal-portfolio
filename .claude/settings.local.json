@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/loganrose/projs/personal-portfolio config:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.gitlab.com)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(npm create:*)",
+      "Bash(npm run build:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm run dev)",
+      "Bash(gh repo list:*)",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}

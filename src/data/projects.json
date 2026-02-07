@@ -25,13 +25,13 @@
   },
   {
     "id": "3",
-    "name": "termGPT",
-    "description": "Terminal-based ChatGPT client that integrates OpenAI's API into your workflow.",
-    "topics": ["python", "openai", "cli", "chatgpt"],
-    "languages": { "Python": 100 },
+    "name": "s3tree",
+    "description": "CLI tool built on top of AWS CLI that lets you traverse S3 buckets like local directories.",
+    "topics": ["rust", "aws", "s3", "cli"],
+    "languages": { "Rust": 100 },
     "stars": 0,
     "forks": 0,
-    "url": "https://github.com/code-prose/termGPT",
+    "url": "https://github.com/code-prose/s3tree",
     "homepage": null,
     "featured": true
   }
