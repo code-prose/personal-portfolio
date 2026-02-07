@@ -13,7 +13,9 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm run dev)",
       "Bash(gh repo list:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(git fetch:*)",
+      "Bash(git ls-tree:*)"
     ]
   }
 }
