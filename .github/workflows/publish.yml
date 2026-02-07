@@ -26,6 +26,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: Push to Build branch
         uses: s0/git-publish-subdir-action@develop
