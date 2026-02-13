@@ -2,8 +2,8 @@
   {
     "id": "1",
     "name": "Rungine",
-    "description": "A search indexing engine implementing TF-IDF in Rust with file parsing and database storage.",
-    "topics": ["rust", "search", "tf-idf", "indexing"],
+    "description": "TF-IDF search engine in Rust with PDF parsing, database integration, and lexical analysis for document indexing.",
+    "topics": ["rust", "search", "tf-idf", "indexing", "pdf"],
     "languages": { "Rust": 100 },
     "stars": 0,
     "forks": 0,
@@ -26,7 +26,7 @@
   {
     "id": "3",
     "name": "s3tree",
-    "description": "CLI tool built on top of AWS CLI that lets you traverse S3 buckets like local directories.",
+    "description": "Interactive CLI for navigating S3 buckets like a local filesystem, built in Rust on top of AWS CLI.",
     "topics": ["rust", "aws", "s3", "cli"],
     "languages": { "Rust": 100 },
     "stars": 0,
