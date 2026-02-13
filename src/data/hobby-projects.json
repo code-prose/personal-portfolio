@@ -5,6 +5,12 @@
       "description": "TF-IDF search engine in Rust with PDF parsing, database integration, and lexical analysis",
       "status": "active",
       "github": "https://github.com/code-prose/rungine"
+    },
+    {
+      "name": "s3tree",
+      "description": "Interactive CLI for navigating S3 buckets like a local filesystem, built in Rust on top of AWS CLI",
+      "status": "active",
+      "github": "https://github.com/code-prose/s3tree"
     }
   ]
 }

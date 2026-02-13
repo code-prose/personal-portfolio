@@ -13,18 +13,6 @@
   },
   {
     "id": "2",
-    "name": "NoteConverter",
-    "description": "CLI tool that extracts text from PDFs and images using OCR.",
-    "topics": ["python", "ocr", "pdf", "cli"],
-    "languages": { "Python": 100 },
-    "stars": 0,
-    "forks": 0,
-    "url": "https://github.com/code-prose/NoteConverter",
-    "homepage": null,
-    "featured": true
-  },
-  {
-    "id": "3",
     "name": "s3tree",
     "description": "Interactive CLI for navigating S3 buckets like a local filesystem, built in Rust on top of AWS CLI.",
     "topics": ["rust", "aws", "s3", "cli"],
@@ -32,6 +20,18 @@
     "stars": 0,
     "forks": 0,
     "url": "https://github.com/code-prose/s3tree",
+    "homepage": null,
+    "featured": true
+  },
+  {
+    "id": "3",
+    "name": "dots",
+    "description": "Personal dotfiles for macOS: Neovim, tmux, Alacritty, and Zsh configurations with automated setup.",
+    "topics": ["dotfiles", "neovim", "tmux", "macos", "lua"],
+    "languages": { "Lua": 39, "Shell": 35, "Python": 26 },
+    "stars": 0,
+    "forks": 0,
+    "url": "https://github.com/code-prose/dots",
     "homepage": null,
     "featured": true
   }
