@@ -15,7 +15,9 @@
       "Bash(gh repo list:*)",
       "WebFetch(domain:github.com)",
       "Bash(git fetch:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
