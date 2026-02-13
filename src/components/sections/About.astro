@@ -25,9 +25,14 @@ import personal from '../../data/personal.json';
       </div>
 
       <div>
-        <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
           {personal.bio}
         </p>
+        {personal.interests && (
+          <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+            {personal.interests}
+          </p>
+        )}
 
         <div class="space-y-4 mb-8">
           <div class="flex items-center gap-3">
