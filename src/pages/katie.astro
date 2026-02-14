@@ -1,0 +1,199 @@
+---
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Katie ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        background: #fdf2f8;
+        overflow: hidden;
+        position: relative;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #be185d;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+
+      p.subtitle {
+        font-size: 1.25rem;
+        color: #9d174d;
+        margin-bottom: 2.5rem;
+        text-align: center;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: center;
+      }
+
+      button {
+        border: none;
+        border-radius: 9999px;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        transition: transform 0.2s ease, font-size 0.3s ease, padding 0.3s ease;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+      }
+
+      #yes-btn {
+        background: #e11d48;
+        color: white;
+        font-size: 1.125rem;
+        padding: 0.875rem 2.5rem;
+      }
+
+      #maybe-btn {
+        background: #fecdd3;
+        color: #be185d;
+        font-size: 1.125rem;
+        padding: 0.875rem 2.5rem;
+      }
+
+      .heart {
+        position: fixed;
+        font-size: 1.5rem;
+        pointer-events: none;
+        animation: float-up 3s ease-out forwards;
+        z-index: 0;
+      }
+
+      @keyframes float-up {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-60vh) scale(1.5) rotate(25deg);
+        }
+      }
+
+      .celebration {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .celebration.show {
+        display: flex;
+      }
+
+      .celebration h1 {
+        font-size: 3rem;
+      }
+
+      .celebration p {
+        font-size: 1.5rem;
+        color: #be185d;
+      }
+
+      .prompt { z-index: 1; display: flex; flex-direction: column; align-items: center; }
+      .prompt.hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="prompt" id="prompt">
+      <h1>Hi hello 💕</h1>
+      <p class="subtitle">Will you be my Valentine?</p>
+      <div class="buttons">
+        <button id="yes-btn">Yes</button>
+        <button id="maybe-btn">Maybe</button>
+      </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+      <h1>wooooo!! 💕</h1>
+      <p>Happy Valentine's Day!!!!!</p>
+    </div>
+
+    <script>
+      const yesBtn = document.getElementById('yes-btn');
+      const maybeBtn = document.getElementById('maybe-btn');
+      const prompt = document.getElementById('prompt');
+      const celebration = document.getElementById('celebration');
+
+      let yesSize = 1.125;
+      const step = 0.35;
+      let maybeClick = 0;
+
+      const maybeTexts = [
+        'Maybe...',
+        'Are you sure?',
+        'Really??',
+        'Think again 🥺',
+        'Pretty please?',
+        'But whyyy',
+        'Cmon...',
+        'Just say yes!',
+        'I\'ll wait',
+        'Still maybe?!',
+        'You\'re killing me',
+        'Ok fine... maybe',
+        'Last chance 👀',
+        '💔',
+        'PLEASE',
+      ];
+
+      function spawnHeart() {
+        const heart = document.createElement('span');
+        heart.className = 'heart';
+        heart.textContent = ['❤️', '💕', '💗', '💖', '💘'][Math.floor(Math.random() * 5)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.bottom = '0';
+        document.body.appendChild(heart);
+        heart.addEventListener('animationend', () => heart.remove());
+      }
+
+      maybeBtn.addEventListener('click', () => {
+        yesSize += step;
+        const newPadV = 0.875 + (yesSize - 1.125) * 0.6;
+        const newPadH = 2.5 + (yesSize - 1.125) * 1.2;
+        yesBtn.style.fontSize = yesSize + 'rem';
+        yesBtn.style.padding = newPadV + 'rem ' + newPadH + 'rem';
+        maybeBtn.textContent = maybeTexts[Math.min(maybeClick, maybeTexts.length - 1)];
+        maybeClick++;
+        if (maybeClick >= maybeTexts.length) {
+          maybeBtn.style.transition = 'opacity 0.5s ease';
+          maybeBtn.style.opacity = '0';
+          setTimeout(() => maybeBtn.remove(), 500);
+        }
+        spawnHeart();
+      });
+
+      yesBtn.addEventListener('click', () => {
+        prompt.classList.add('hidden');
+        celebration.classList.add('show');
+        for (let i = 0; i < 30; i++) {
+          setTimeout(spawnHeart, i * 100);
+        }
+      });
+    </script>
+  </body>
+</html>
